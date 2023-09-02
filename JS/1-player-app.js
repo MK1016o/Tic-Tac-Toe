@@ -1,10 +1,29 @@
 const boxes = document.querySelectorAll('.box');
-let playerChance = 1;
+let playerChance = 2;
 let arr = [['.', '.', '.'],
            ['.', '.', '.'],
            ['.', '.', '.']];
+
+const param = new URLSearchParams(window.location.search);
+let myCh = param.get('choice');
+let cpuCh;
+if(myCh == 'X') {
+    cpuCh = 'O';
+} else {
+    cpuCh = 'X';
+}
 const again = document.querySelector('#restart');
 const turn = document.querySelector('.player-turn');
+if(myCh == 'X') {
+    turn.setAttribute('src', '../Images/cross-turn.svg');
+} else {
+    turn.setAttribute('src', '../Images/circle-turn.svg');
+}
+
+let hoverAudio = document.createElement('audio');
+hoverAudio.setAttribute('src', '../Sound/hover.mp3');
+let gameOverAudio = document.createElement('audio');
+gameOverAudio.setAttribute('src', '../Sound/game-over.wav');
 
 const player_1 = document.querySelector('#player1-points');
 const player_2 = document.querySelector('#player2-points');
@@ -15,20 +34,15 @@ let tiesPoints = 0;
 let p2Points = 0;
 let point = 0;
 
-let hoverAudio = document.createElement('audio');
-hoverAudio.setAttribute('src', 'hover.mp3');
-
-const param = new URLSearchParams(window.location.search);
-let first = param.get('choice');
-let second;
-if(first == 'X') {
-    turn.setAttribute('src', 'cross-turn.svg');
-    playerChance = 2;
-    second = 'O';
+let myNum = 1;
+let cpuNum;
+if(myNum == 1) {
+    cpuNum = 2;
 } else {
-    turn.setAttribute('src', 'circle-turn.svg');
-    second = 'X';
+    cpuNum = 1;
 }
+
+
 
 const check = (choice) => {
     let win = 0;
@@ -98,27 +112,30 @@ const insertArr = (pos, choice, player) => {
     let row = (Math.floor(pos / 10)) - 1;
     let col = (pos % 10) - 1;
     arr[row].splice(col, 1, choice);
-    if(playerChance % 2 == 0) {
-        turn.setAttribute('src', 'circle-turn.svg');
+    if(myCh == 'X') {
+        turn.setAttribute('src', '../Images/cross-turn.svg');
     } else {
-        turn.setAttribute('src', 'cross-turn.svg');
+        turn.setAttribute('src', '../Images/circle-turn.svg');
     }
+    
+    
     // check
     if(check(choice)) {
-        if(player == 1){
-            p2Points++;
-            player_2.innerText = p2Points;
-            setTimeout(() => {
-                restart();
-            }, 500);
-            point ++;
-        } else {
+        if(player == myNum){
             p1Points++;
             player_1.innerText = p1Points;
             setTimeout(() => {
                 restart();
-            }, 500); 
-            point ++; 
+            }, 250); 
+            point++;
+        } else {
+            p2Points++;
+            player_2.innerText = p2Points;
+            gameOverAudio.play();
+            setTimeout(() => {
+                restart();
+            }, 250);
+            point ++;
         }
     }
     if(checkFill() && point == 0) {
@@ -134,19 +151,43 @@ const insertArr = (pos, choice, player) => {
 for(box of boxes) {
     box.addEventListener('click', (ev) => {
         let pos = ev.target.id;
-        if(playerChance % 2 == 0) {
-                ev.target.innerHTML = '<img src="cross.svg" alt="cross" class="cross">';
-                hoverAudio.play();
-                insertArr(pos, 'X', 2);
-            
+        if(myCh == 'X') {
+            ev.target.innerHTML = '<img src="../Images/cross.svg" alt="cross" class="cross">';
         } else {
-            
-                ev.target.innerHTML = '<img src="circle.svg" alt="circle" class="circle">';
-                hoverAudio.play();
-                insertArr(pos, 'O', 1);
+            ev.target.innerHTML = '<img src="../Images/circle.svg" alt="cross" class="circle">';
         }
-        playerChance ++;
+        insertArr(pos, myCh, myNum);
+        if(!checkFill()){
+            setTimeout(() => {
+                generate_insert();
+            }, 300);
+        }
     })
+}
+
+const generate_insert = () => {
+    // generate pos
+    let pos1 = Math.floor(Math.random() * 3) + 1;
+    let pos2 = Math.floor(Math.random() * 3) + 1;
+    while(true){
+        if(arr[pos1 - 1][pos2 - 1] == '.') {
+            break;
+        }
+        pos1 = Math.floor(Math.random() * 3) + 1;
+        pos2 = Math.floor(Math.random() * 3) + 1;
+    }
+    
+    let random = (pos1 * 10) + pos2;
+    
+    // change
+    let box = document.getElementById(`${random}`);
+    if(cpuCh == 'X') {
+        box.innerHTML = '<img src="../Images/cross.svg" alt="cross" class="cross">';
+    } else {
+        box.innerHTML = '<img src="../Images/circle.svg" alt="circle" class="circle">';
+    }
+    hoverAudio.play();
+    insertArr(random, cpuCh, cpuNum);
 }
 
 again.addEventListener('click', extraRestart);

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tic Tac Toe</title>
     <link rel="shortcut icon" href="Tic Tac Toe.png" type="image/x-icon" />
-    <link rel="stylesheet" href="Player-style.css" />
+    <link rel="stylesheet" href="../CSS/Player-style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,15 +18,15 @@
     <div class="main">
       <div class="head flex">
         <div class="tic-tac">
-          <img src="cross.svg" alt="" width="50rem">
-          <img src="circle.svg" alt="" width="50rem">
+          <img src="../Images/cross.svg" alt="" width="50rem">
+          <img src="../Images/circle.svg" alt="" width="50rem">
         </div>
         <div class="turn case flex">
-          <img src="circle-turn.svg" alt="" class="player-turn" width="50rem">
+          <img src="" alt="" class="player-turn" width="50rem">
           <span>Turn</span>
         </div>
-        <div class="restart case" id="restart">
-          <i class="fa-solid fa-rotate-right"></i>
+        <div class="restart case">
+          <i class="fa-solid fa-rotate-right" id="restart"></i>
         </div>
       </div>
       <div class="line1 flex">
@@ -45,8 +45,8 @@
         <div class="box case" id="33"></div>
       </div>
       <div class="foot flex">
-        <div class="player-1 flex case" style="padding-inline: 3rem;">
-          <p>X(You)</p>
+        <div class="player-1 flex case">
+          <p>X(Player 1)</p>
           <p><b id="player1-points">0</b></p>
         </div>
         <div class="ties flex case">
@@ -54,11 +54,11 @@
           <p><b id="ties-points">0</b></p>
         </div>
         <div class="player-2 flex case">
-          <p>O(CPU)</p>
+          <p>O(Player 2)</p>
           <p><b id="player2-points">0</b></p>
         </div>
       </div>
     </div>
-    <script src="1-player-app.js"></script>
+    <script src="../JS/2-player-app.js"></script>
   </body>
 </html>
